@@ -13,4 +13,8 @@ public class LogTest implements CommandLineRunner {
         log.info("打印启动日志，时间:{}",System.currentTimeMillis());
 
     }
+
+//    public static void main(String[] args) {
+//        System.out.println("123");
+//    }
 }
