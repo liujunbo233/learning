@@ -1,0 +1,51 @@
+server:
+  port: 28011
+
+
+spring:
+  application:
+    # TODO: 这里配置成实际工程的名字, 作为发布ISB服务的ID.
+    name: kafka-learning
+
+  cloud:
+    consul:
+      #      host: consul-dev-tech.ikunchi.com
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+    #消息推送服务器
+
+
+    #刷新mapper 调试神器
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      linger-ms-config: 1000
+    consumer:
+      group-id: test-consumer-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      auto-commit-interval: 100
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+logging:
+  #系统日志文件输出地址
+  #系统日志输出级别
+  #sys系统输出将过滤器的日志级别配置为level
+  sys:
+    level: INFO
+  #console控制台打印日志将当日志级别等于或高于临界值时
+  console:
+    level: INFO
+
+  config: classpath:logback.xml
+  file:
+    path: ./logs

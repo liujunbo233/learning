@@ -1,0 +1,39 @@
+server:
+  port: 28012
+
+spring:
+  application:
+    # TODO: 这里配置成实际工程的名字, 作为发布ISB服务的ID.
+    name: rocketmq-learning
+
+  cloud:
+    consul:
+      #      host: consul-dev-tech.ikunchi.com
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    send-message-timeout: 300000
+    group: rocket-group
+
+#logging:
+#  #系统日志文件输出地址
+#  #系统日志输出级别
+#  #sys系统输出将过滤器的日志级别配置为level
+#  sys:
+#    level: INFO
+#  #console控制台打印日志将当日志级别等于或高于临界值时
+#  console:
+#    level: INFO
+#
+#  config: classpath:logback.xml
+#  file:
+#    path: ./logs
+
+
+

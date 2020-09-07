@@ -1,0 +1,5 @@
+rootProject.name = 'learning'
+include 'learning-domain'
+include 'learning-kafka'
+include 'learning-rocketmq'
+

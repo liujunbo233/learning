@@ -1,0 +1,149 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+repositories {
+    mavenCentral()
+}
+subprojects {
+//配置此项目的子项目公共配置
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    eclipse {
+        classpath {
+            downloadSources = true
+        }
+
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    // TODO: 这里要修改成 实际的工程名字.
+    group = 'com.csu'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    ext {
+        set('springCloudVersion', "Hoxton.SR7")
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        compile group: 'com.alibaba', name: 'fastjson', version: '1.2.45'
+    }
+
+}
+//公共的配置用来配置所有子项目
+
+// TODO: 这里要修改成 实际的工程名字.
+project(':learning-domain') {
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    jar {
+        enabled = true
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+// TODO: 这里要修改成 实际的工程名字.
+project(':learning-kafka') {
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-starter'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        compile(
+                'org.springframework.cloud:spring-cloud-starter-consul-discovery',
+                'org.springframework.boot:spring-boot-starter-actuator',
+                'net.bull.javamelody:javamelody-spring-boot-starter:1.82.0',
+                'org.springframework.boot:spring-boot-starter-aop'
+        )
+        compile group: 'org.springframework.integration', name: 'spring-integration-kafka', version: '3.3.1.RELEASE'
+        compile group: 'com.github.danielwegener', name: 'logback-kafka-appender', version: '0.2.0-RC2'
+        compile 'ch.qos.logback:logback-classic:1.2.3'
+        compile project(':learning-domain')
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+project(':learning-rocketmq') {
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-starter'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        compile(
+                'org.springframework.cloud:spring-cloud-starter-consul-discovery',
+                'org.springframework.boot:spring-boot-starter-actuator',
+                'net.bull.javamelody:javamelody-spring-boot-starter:1.82.0',
+                'org.springframework.boot:spring-boot-starter-aop'
+        )
+        compile 'org.apache.rocketmq:rocketmq-spring-boot-starter:2.0.3'
+        compile project(':learning-domain')
+
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+
